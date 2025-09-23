@@ -60,7 +60,3 @@ class ModalLoader {
         $(this.modalContainer).css('display','none');
     }
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    window.modalLoader = new ModalLoader();
-});
