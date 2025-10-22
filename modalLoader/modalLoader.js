@@ -1,7 +1,6 @@
 class ModalLoader {
     constructor() {
         this.modalContainer = null;
-        this.modalContent = null;
         this.init();
     }
 
@@ -10,7 +9,6 @@ class ModalLoader {
             this.createModalContainer();
         } else {
             this.modalContainer = document.getElementById('myModal');
-            this.modalContent = this.modalContainer.querySelector('.modal-content');
         }
         this.addBackdropClickHandler();
     }
@@ -20,16 +18,15 @@ class ModalLoader {
         this.modalContainer.id = 'myModal';
         this.modalContainer.classList.add('modal');
         document.body.appendChild(this.modalContainer);
-        this.modalContent = document.createElement('div');
-        this.modalContent.classList.add('modal-content', 'transparent');
-        this.modalContainer.appendChild(this.modalContent);
+        this.modalContainer.innerHTML = `
+            <div class="modal-content transparent">
+               
+            </div>
+        `;
     }
-
     addBackdropClickHandler() {
         this.modalContainer.addEventListener('click', (event) => {
-            console.log('click detected', event.target, this.modalContainer);
             if (event.target === this.modalContainer) {
-                console.log('closing modal');
                 this.closeModal();
             }
         });
@@ -49,11 +46,12 @@ class ModalLoader {
             data: data,
             dataType: 'json',
             success: (response) => {
-                addBackdropClickHandler();
                 $(el).prop('disabled', false);
                 $(el).removeClass('disabled');
                 if(response.success) {
-                    this.showModal(response.data['html']);
+                    $('.modal').css('display','flex');
+                    $('.modal').html(response.data['html']);
+                    console.log(response);
                 } else {
                     showMessage(response.data, 'error');
                 }
@@ -62,16 +60,7 @@ class ModalLoader {
     }
 
     setLoader(){
-        if (this.modalContent) {
-            this.modalContent.innerHTML = '<div class="spinner"></div>';
-        }
-        $(this.modalContainer).css('display','flex');
-    }
-
-    showModal(html) {
-        if (this.modalContent) {
-            this.modalContent.innerHTML = html;
-        }
+        $(this.modalContainer).html('<div class="spinner"></div>');
         $(this.modalContainer).css('display','flex');
     }
 
